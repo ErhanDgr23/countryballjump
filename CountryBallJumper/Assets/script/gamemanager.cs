@@ -21,10 +21,12 @@ public class gamemanager : MonoBehaviour
 
     public customgamemode selectedMode;
 
+    [SerializeField] interstatialad adscript;
     [SerializeField] int[] leveller;
     [SerializeField] GameObject[] yildizlar;
     [SerializeField] GameObject[] sesler;
     [SerializeField] GameObject winpan;
+    [SerializeField] Button resbut;
     [SerializeField] AudioListener kameralistener;
     [SerializeField] Image soundimage;
     [SerializeField] Sprite soundon, soundoff;
@@ -54,6 +56,7 @@ public class gamemanager : MonoBehaviour
         gamemodepan = gamemodetext.transform.parent.gameObject;
         animatedwinpan = winpan.transform.GetChild(0).GetComponent<AiryUIAnimatedElement>();
         sesler[1] = GameObject.FindGameObjectWithTag("musicplayer");
+        resbut = winpan.transform.GetChild(0).GetChild(1).transform.GetComponent<Button>();
 
         if (!PlayerPrefs.HasKey("level"))
         {
@@ -138,9 +141,23 @@ public class gamemanager : MonoBehaviour
     {
         if (!levenexed)
         {
-            StartCoroutine(beklenextload());
-            levenexed = true;
+            if(adscript.adisready)
+            {
+                adscript.ShowInterstitialAd();
+                //Invoke("reslevelfunction", 2f);
+                resbut.interactable = false;
+            }
+            else
+            {
+                reslevelfunction();
+            }
         }
+    }
+
+    public void reslevelfunction()
+    {
+        StartCoroutine(beklenextload());
+        levenexed = true;
     }
 
     IEnumerator beklenextload()
